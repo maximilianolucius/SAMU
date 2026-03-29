@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>ElevenLabs ConvAI • Demo Client Tool: logMessage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    body { margin: 0; background: #f7f7f9; color:#0f172a; }
+    .app { display: grid; grid-template-columns: 360px 1fr; min-height: 100vh; }
+    aside { background: #ffffff; border-right: 1px solid #e5e7eb; padding: 16px; }
+    main { display: grid; place-items: center; padding: 16px; }
+    h1 { margin: 0 0 6px 0; font-size: 18px; }
+    .muted { color:#6b7280; font-size: 13px; margin-bottom: 10px; }
+    .row { display:flex; align-items:center; justify-content:space-between; gap: 8px; margin: 10px 0; }
+    .pill { background:#eff6ff; color:#1e3a8a; border:1px solid #bfdbfe; padding: 2px 8px; border-radius: 999px; font-size: 12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; }
+    .status { background:#f1f5f9; border:1px solid #e2e8f0; border-radius: 10px; padding: 8px 10px; font-size: 13px; margin: 8px 0 12px; }
+    .logs { display:flex; flex-direction:column; gap:8px; max-height: calc(100vh - 220px); overflow:auto; }
+    .log { background:#ffffff; border:1px solid #e5e7eb; border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+    .log .t { font-size: 11px; color:#64748b; margin-bottom: 4px; }
+    .log .lvl { font-weight:600; margin-right: 6px; }
+    .widget-shell { width: 100%; max-width: 780px; min-height: 460px; background: #fff; border: 1px dashed #cbd5e1; border-radius: 12px; display:flex; align-items:center; justify-content:center; padding: 12px; }
+    .help { font-size:12px; color:#475569; margin-top:12px; line-height:1.35 }
+    code { background:#f8fafc; border:1px solid #e2e8f0; padding:2px 6px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>Demo: <span class="mono">logMessage</span></h1>
+      <div class="muted">Muestra en vivo los mensajes que envía el agente usando el Client Tool <b>logMessage</b>.</div>
+      <div class="row">
+        <div>Sesión</div>
+        <div id="sid" class="pill mono">—</div>
+      </div>
+      <div id="status" class="status">⏳ Esperando a que inicie la llamada…</div>
+      <div id="logs" class="logs"></div>
+      <div class="help">
+        <p><b>Cómo probar:</b></p>
+        <ol>
+          <li>Reemplaza <code>agent_4001kc571fptfk0vj47krstyn85v</code> en el HTML por tu Agent ID.</li>
+          <li>En el dashboard del agente, crea el <i>Client Tool</i> <code>logMessage</code> con parámetros:
+            <ul>
+              <li><code>level</code> (string, requerido; ej. <code>"info"</code>, <code>"warn"</code>, <code>"error"</code>)</li>
+              <li><code>message</code> (string, requerido)</li>
+              <li><code>data</code> (json/string, opcional)</li>
+            </ul>
+          </li>
+          <li>Pega el <i>system prompt</i> incluido en el archivo <code>system_prompt_logMessage.txt</code>.</li>
+          <li>Abre la página, pulsa “Start call” y acepta micrófono.</li>
+        </ol>
+      </div>
+    </aside>
+    <main>
+      <div class="widget-shell">
+        <!-- ⬇️ Reemplaza agent_4001kc571fptfk0vj47krstyn85v por tu Agent ID ⬇️ -->
+        <elevenlabs-convai
+          id="convai"
+          agent-id="agent_4001kc571fptfk0vj47krstyn85v"
+          variant="expanded"
+          override-language="es"
+          dynamic-variables='{"session_id":"PENDING"}'>
+        </elevenlabs-convai>
+      </div>
+    </main>
+  </div>
+
+  <!-- Script del widget -->
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+
+  <script>
+    (function(){
+      const $ = (s)=>document.querySelector(s);
+      const widget = $("#convai");
+      const statusEl = $("#status");
+      const logsEl = $("#logs");
+      const sidEl = $("#sid");
+
+      // Utilidades
+      const SID = (self.crypto?.randomUUID?.() || String(Math.random()).slice(2));
+      const ts = ()=> new Date().toLocaleString();
+      const esc = (s)=> String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+      function setStatus(text){ statusEl.textContent = text; }
+      function addLog({ level='info', message='', data=null }){
+        const el = document.createElement('div');
+        el.className = 'log';
+        el.innerHTML = `
+          <div class="t">${ts()}</div>
+          <div><span class="lvl">[${esc(level)}]</span> ${esc(message)}</div>
+          ${data !== undefined && data !== null ? `<pre class="mono" style="white-space:pre-wrap;margin-top:6px">${esc(typeof data === 'string' ? data : JSON.stringify(data, null, 2))}</pre>` : ''}
+        `;
+        logsEl.appendChild(el);
+        logsEl.scrollTop = logsEl.scrollHeight;
+      }
+
+      // Preparar session_id dinámico
+      sidEl.textContent = SID;
+      widget?.setAttribute('dynamic-variables', JSON.stringify({ session_id: SID }));
+
+      // Verificar que el custom element esté definido
+      customElements.whenDefined('elevenlabs-convai').then(() => {
+        console.info('[convai] Custom element ready');
+      });
+
+      // Hook principal: cuando inicia la llamada
+      widget?.addEventListener('elevenlabs-convai:call', (event) => {
+        console.info('[convai] CALL event', event?.detail);
+        setStatus('✅ Llamada iniciada. Esperando mensajes del agente…');
+
+        // Registrar Client Tools
+        try {
+          event.detail.config.clientTools = {
+            // Client Tool: logMessage
+            logMessage: async ({ level, message, data }) => {
+              console.info('[tool] logMessage', { level, message, data });
+              addLog({ level: level || 'info', message: message || '', data: (data === undefined ? null : data) });
+              return { ok: true, receivedAt: new Date().toISOString() };
+            }
+          };
+        } catch (e) {
+          console.error('[convai] Error registrando clientTools', e);
+          setStatus('⚠️ Error registrando clientTools (ver consola).');
+        }
+      });
+
+      // Fin de llamada
+      widget?.addEventListener('elevenlabs-convai:end', (event) => {
+        console.info('[convai] END event', event?.detail);
+        setStatus('ℹ️ Llamada finalizada.');
+      });
+
+      // Errores (si el widget emite)
+      widget?.addEventListener('elevenlabs-convai:error', (e) => {
+        console.error('[convai] ERROR', e?.detail || e);
+        setStatus('❌ Error en la llamada (revisa consola).');
+        addLog({ level: 'error', message: 'Widget error', data: e?.detail || {} });
+      });
+
+      // Sanity check del script del widget
+      setTimeout(() => {
+        const defined = !!customElements.get('elevenlabs-convai');
+        if (!defined) {
+          setStatus('❌ El script del widget no cargó. Revisa la etiqueta <script> y tu red.');
+        }
+      }, 1500);
+    })();
+  </script>
+</body>
+</html>

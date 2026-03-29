@@ -1,0 +1,13 @@
+[project]
+name = "samu"
+version = "1.0.0"
+description = "SAMI — Asistente de Apoyo Psicologico Virtual"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.pyright]
+pythonVersion = "3.10"
+typeCheckingMode = "basic"
