@@ -31,7 +31,7 @@ para monitorear y gestionar el agente y sus conversaciones.
 | Archivo           | Descripcion                                                              |
 |-------------------|--------------------------------------------------------------------------|
 | `sami_bot.py`     | Bot de texto. Chat interactivo por consola contra un servidor vLLM.      |
-| `app.py`          | Dashboard web (Flask + SocketIO). Proxea la API de ElevenLabs con 26 endpoints. Recibe webhooks en tiempo real. |
+| `app.py`          | Dashboard web (Flask + SocketIO). Proxy la API con 26 endpoints. Recibe webhooks en tiempo real. |
 | `eleven_lab.py`   | Cliente de voz. Inicia una sesion con el agente de ElevenLabs usando microfono y altavoz. |
 | `config.py`       | Configuracion centralizada. Carga `.env`, configura logging, valida variables. |
 
