@@ -1,0 +1,41 @@
+========================================
+RESUMEN CONSOLIDADO DE REQUERIMIENTOS
+========================================
+
+
+--- COSTE DEL SERVICIO ---
+R1. No indicar que el servicio tiene coste. El servicio solo tendrá coste en caso de ser transferido a un profesional. [Imagen 1-A, Imagen 2-mejoras, feedback.txt]
+R2. La mención del coste no se entiende bien y no siempre aparece. Revisar consistencia. [Imagen 2-mejoras]
+
+
+--- TONO Y SALUDO ---
+R3. El tono inicial no debe ser demasiado efusivo. Debe ajustarse al contexto emocional del usuario. [Imagen 1-G]
+R4. No debe haber cambios bruscos de tono de voz dentro de la misma frase. [Imagen 1-G]
+R5. El saludo debe adaptarse a la hora del día (buenos días / buenas tardes / buenas noches), no usar siempre "buenos días". [Imagen 2-mejoras]
+
+
+--- GESTIÓN DE LLAMADA ---
+R6. Si la persona está nerviosa, se bloquea y cuelga: mejorar el manejo para retener al usuario en estos casos. [Imagen 1-B]
+R7. La llamada aún se corta sin aviso. El usuario no sabe si se ha cortado o qué ha pasado. Resolver problema de corte de llamada. [Imagen 2-2]
+
+
+--- IDIOMA Y PRONUNCIACIÓN ---
+R8. Al contar, no debe decir los números en inglés ni en otros idiomas. Siempre en español. [Imagen 1-C]
+R9. La palabra "psicólogo" se pronuncia de manera extraña (pronunciando la "P"). Corregir pronunciación. [Imagen 1-F]
+
+
+--- COMPRENSIÓN DEL LENGUAJE ---
+R10. Debe entender mejor expresiones coloquiales, refranes populares y lenguaje implícito. No esperar a que el usuario sea completamente explícito para intervenir. [Imagen 1-E]
+
+
+--- PROTOCOLOS DE EMERGENCIA Y DERIVACIÓN ---
+R11. NUNCA recomendar terminar la llamada ante un caso de peligro. En su lugar, preguntar por la dirección y activar protocolos de emergencia. [Imagen 1-D]
+R12. Ante una crisis grave (ej. mareos, caídas, síntomas físicos), debe derivar automáticamente, no solo dar pautas. [Imagen 2-6]
+R13. Ser más intervencionista: ante situaciones como violencia de género, activar automáticamente alerta a emergencias en lugar de solo acompañar al usuario para que llame por su cuenta. [Imagen 2-7]
+R14. El protocolo ante suicidio debe indicar claramente: VALORAR, ACTIVAR o DERIVAR URGENTE A PROFESIONAL. [Imagen 2-10]
+R15. La idea es siempre mantener la llamada con la IA, o si es urgente/de riesgo, pasarlo a un profesional de SAMU. [feedback.txt]
+
+
+--- DERIVACIÓN A PROFESIONALES ---
+R16. NUNCA derivar a que el usuario acuda a un psicólogo de manera presencial por su cuenta. Eso va en contra del servicio. La derivación siempre debe ser interna (a profesional de SAMU). [Imagen 1-H]
+R17. El cierre de la llamada debe afinarse: "te paso con un profesional" o "estoy activando al servicio de emergencia y mientras tanto sígueme hablando". [Imagen 2-mejoras]

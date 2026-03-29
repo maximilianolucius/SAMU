@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lexicon version="1.0" xmlns="http://www.w3.org/2005/01/pronunciation-lexicon" alphabet="ipa" xml:lang="es">
+  <lexeme>
+    <grapheme>psicólogo</grapheme>
+    <alias>sicólogo</alias>
+  </lexeme>
+  <lexeme>
+    <grapheme>psicóloga</grapheme>
+    <alias>sicóloga</alias>
+  </lexeme>
+  <lexeme>
+    <grapheme>psicología</grapheme>
+    <alias>sicología</alias>
+  </lexeme>
+  <lexeme>
+    <grapheme>psicológico</grapheme>
+    <alias>sicológico</alias>
+  </lexeme>
+  <lexeme>
+    <grapheme>psicológica</grapheme>
+    <alias>sicológica</alias>
+  </lexeme>
+  <lexeme>
+    <grapheme>Psicólogo</grapheme>
+    <alias>sicólogo</alias>
+  </lexeme>
+  <lexeme>
+    <grapheme>Psicóloga</grapheme>
+    <alias>sicóloga</alias>
+  </lexeme>
+  <lexeme>
+    <grapheme>Psicología</grapheme>
+    <alias>sicología</alias>
+  </lexeme>
+</lexicon>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>ConvAI: Preguntas en vivo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    body { margin: 0; background: #f7f7f9; }
+    .app {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      min-height: 100vh;
+    }
+    .left {
+      background: #fff; border-right: 1px solid #e5e7eb; padding: 18px;
+    }
+    .right {
+      display: grid; place-items: center; padding: 18px;
+    }
+    h1 { margin: 0 0 8px 0; font-size: 18px; }
+    .muted { color: #6b7280; font-size: 13px; margin-bottom: 12px; }
+    .feed {
+      display: flex; flex-direction: column; gap: 10px; max-height: calc(100vh - 150px); overflow: auto;
+      padding-right: 6px;
+    }
+    .card {
+      background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .qid { font-weight: 600; font-size: 12px; color: #374151; }
+    .qtext { margin-top: 6px; font-size: 14px; line-height: 1.35; color: #111827; }
+    .ts { margin-top: 6px; font-size: 11px; color: #6b7280; }
+    .status {
+      display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#2563eb; background:#eff6ff;
+      border:1px solid #bfdbfe; border-radius:999px; padding:4px 10px; margin-bottom: 12px;
+    }
+    .widget-shell {
+      width: 100%; max-width: 740px; min-height: 420px; background: #fff; border: 1px dashed #d1d5db; border-radius: 12px;
+      display:flex; align-items:center; justify-content:center; padding: 16px;
+    }
+    .row { display:flex; align-items:center; justify-content:space-between; gap: 8px; margin-bottom: 12px; }
+    .small { font-size: 12px; color: #6b7280; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    .pill {
+      background:#f1f5f9; color:#0f172a; border-radius:999px; padding:2px 8px; font-size:12px;
+      border:1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="left">
+      <h1>Preguntas en vivo</h1>
+      <div class="muted">Verás aquí cada pregunta que el agente formula en el momento en que la va a pronunciar.</div>
+
+      <div class="row">
+        <div class="small">Sesión:</div>
+        <div class="pill mono" id="session-pill">—</div>
+      </div>
+
+      <div class="status" id="status-pill">
+        <span>⏳ Esperando inicio de llamada…</span>
+      </div>
+
+      <div class="feed" id="questions-feed"></div>
+    </aside>
+
+    <main class="right">
+      <div class="widget-shell">
+        <!-- Widget ElevenLabs -->
+        <elevenlabs-convai 
+          agent-id="agent_2701k3nv9en2fqcavhpdmfgbew5b"
+          variant="expanded"
+          dynamic-variables='{"session_id":"{{SESSION_ID_RANDOM}}"}'
+          override-language="es">
+        </elevenlabs-convai>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  <script>
+    // ======= Utilidades simples =======
+    const SESSION_ID = (self.crypto?.randomUUID?.() || String(Math.random()).slice(2));
+    const $ = (sel) => document.querySelector(sel);
+    const feedEl = $("#questions-feed");
+    const sessionPill = $("#session-pill");
+    const statusPill = $("#status-pill");
+    const widget = $("#convai");
+
+    function nowIso() { return new Date().toISOString(); }
+
+    function renderQuestion({ question_id, question_text, ts }) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="qid">ID: ${escapeHtml(question_id)}</div>
+        <div class="qtext">${escapeHtml(question_text)}</div>
+        <div class="ts">${new Date(ts).toLocaleString()}</div>
+      `;
+      feedEl.appendChild(card);
+      feedEl.scrollTop = feedEl.scrollHeight;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      }[c]));
+    }
+
+    // ======= Al cargar, fija la session_id dinámica en el widget =======
+    document.addEventListener("DOMContentLoaded", () => {
+      sessionPill.textContent = SESSION_ID;
+      widget.setAttribute("dynamic-variables", JSON.stringify({ session_id: SESSION_ID }));
+
+      // Cuando el widget inicia la llamada, se puede registrar Client Tools
+      widget.addEventListener("elevenlabs-convai:call", (event) => {
+        statusPill.innerHTML = "✅ Llamada iniciada. Escuchando preguntas…";
+
+        // Registramos tools para que el agente pueda "avisar" las preguntas
+        event.detail.config.clientTools = {
+          displayQuestion: async ({ question_id, question_text }) => {
+            const ts = nowIso();
+            renderQuestion({ question_id, question_text, ts });
+            // Respuesta al agente (por si marcaste "Wait for response")
+            return { ok: true, ts };
+          }
+        };
+      });
+
+      // (Opcional) Si el widget emite un evento de finalización, puedes actualizar estado UI:
+      widget.addEventListener("elevenlabs-convai:end", () => {
+        statusPill.innerHTML = "ℹ️ Llamada finalizada.";
+      });
+    });
+  </script>
+</body>
+</html>
+

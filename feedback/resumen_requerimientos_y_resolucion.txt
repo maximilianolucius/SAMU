@@ -1,0 +1,68 @@
+========================================
+RESUMEN CONSOLIDADO DE REQUERIMIENTOS
+========================================
+
+
+--- COSTE DEL SERVICIO ---
+R1. No indicar que el servicio tiene coste. El servicio solo tendrá coste en caso de ser transferido a un profesional. [Imagen 1-A, Imagen 2-mejoras, feedback.txt]
+>> RESUELTO: Se ha eliminado la mención del coste de 13,75€ del saludo inicial. Ahora el mensaje de bienvenida indica "Esta primera atención es gratuita". El coste solo se menciona al final, si se va a derivar al usuario a un profesional del equipo.
+
+R2. La mención del coste no se entiende bien y no siempre aparece. Revisar consistencia. [Imagen 2-mejoras]
+>> RESUELTO: Se ha simplificado y reubicado la mención del coste. Ya no aparece en el bloque de confidencialidad (donde generaba confusión), sino únicamente en el cierre cuando se transfiere a un profesional, con un mensaje claro: "Solo en caso de continuar con el profesional, la sesión tendría un coste."
+
+
+--- TONO Y SALUDO ---
+R3. El tono inicial no debe ser demasiado efusivo. Debe ajustarse al contexto emocional del usuario. [Imagen 1-G]
+>> RESUELTO: Se ha reescrito el saludo inicial para que sea más contenido. Se eliminó la frase "Gracias por animarte a pedir ayuda, eso ya es un paso importante" y se sustituyó por un tono más neutro y acogedor: "Estoy aquí para escucharte." Además, se ha añadido una regla explícita de que el tono inicial no debe ser efusivo ni entusiasta.
+
+R4. No debe haber cambios bruscos de tono de voz dentro de la misma frase. [Imagen 1-G]
+>> RESUELTO: Se ha añadido una regla de tono consistente que indica mantener un tono estable y uniforme dentro de cada frase, evitando cambios bruscos de entonación o de registro emocional. Además se han ajustado los parámetros de estabilidad de la voz para reducir las variaciones tonales.
+
+R5. El saludo debe adaptarse a la hora del día (buenos días / buenas tardes / buenas noches), no usar siempre "buenos días". [Imagen 2-mejoras]
+>> RESUELTO: Se ha añadido una instrucción explícita para adaptar el saludo a la hora del día: "Buenos días", "Buenas tardes" o "Buenas noches" según corresponda. Si no se conoce la hora, se usa "Hola".
+
+
+--- GESTIÓN DE LLAMADA ---
+R6. Si la persona está nerviosa, se bloquea y cuelga: mejorar el manejo para retener al usuario en estos casos. [Imagen 1-B]
+>> RESUELTO: Se ha añadido un protocolo completo para personas nerviosas, bloqueadas o en silencio prolongado. Incluye frases de normalización ("Es normal estar nervioso, no hay prisa"), alternativas simples para facilitar la respuesta ("Puedes empezar con un sí o un no"), y la instrucción de nunca colgar ni sugerir terminar la llamada.
+
+R7. La llamada aún se corta sin aviso. El usuario no sabe si se ha cortado o qué ha pasado. Resolver problema de corte de llamada. [Imagen 2-2]
+>> RESUELTO: Se ha aumentado el tiempo máximo de llamada y el tiempo de espera ante silencios para evitar cortes automáticos. Se ha añadido la instrucción de nunca terminar la llamada por silencio del usuario y mantener siempre la conexión activa.
+
+
+--- IDIOMA Y PRONUNCIACIÓN ---
+R8. Al contar, no debe decir los números en inglés ni en otros idiomas. Siempre en español. [Imagen 1-C]
+>> RESUELTO: Se ha añadido una regla explícita: "Siempre di los números en español. Nunca uses números en inglés ni en otros idiomas." Se ha verificado que el idioma del sistema esté configurado como español.
+
+R9. La palabra "psicólogo" se pronuncia de manera extraña (pronunciando la "P"). Corregir pronunciación. [Imagen 1-F]
+>> RESUELTO: Se ha corregido de dos formas. Primero, se ha añadido una instrucción para que siempre diga "sicólogo", "sicóloga", "sicología" sin pronunciar la P. Segundo, se ha configurado un diccionario de pronunciación que reemplaza automáticamente todas las variantes de la palabra para que se pronuncien correctamente.
+
+
+--- COMPRENSIÓN DEL LENGUAJE ---
+R10. Debe entender mejor expresiones coloquiales, refranes populares y lenguaje implícito. No esperar a que el usuario sea completamente explícito para intervenir. [Imagen 1-E]
+>> RESUELTO: Se ha añadido una sección completa de comprensión del lenguaje coloquial e implícito. Incluye ejemplos concretos de expresiones comunes ("Estoy al límite", "No puedo más", "Se me ha caído el mundo encima", "Me quiero morir", etc.) con su interpretación y la instrucción de explorar siempre con empatía ante cualquier expresión ambigua, sin esperar a que el usuario sea completamente explícito.
+
+
+--- PROTOCOLOS DE EMERGENCIA Y DERIVACIÓN ---
+R11. NUNCA recomendar terminar la llamada ante un caso de peligro. En su lugar, preguntar por la dirección y activar protocolos de emergencia. [Imagen 1-D]
+>> RESUELTO: Se ha reescrito completamente el protocolo de crisis. Ya no se recomienda cortar la llamada bajo ninguna circunstancia. Ahora el protocolo indica: preguntar por la ubicación del usuario, activar al equipo de emergencias y mantener la conversación activa hasta que se complete la transferencia. Se ha añadido un protocolo específico para personas que representan un peligro para otros, con el mismo enfoque: preguntar dirección y activar emergencias, nunca colgar.
+
+R12. Ante una crisis grave (ej. mareos, caídas, síntomas físicos), debe derivar automáticamente, no solo dar pautas. [Imagen 2-6]
+>> RESUELTO: Se ha añadido un protocolo nuevo para crisis con síntomas físicos graves (mareos intensos, caídas, pérdida de conocimiento, dolor en el pecho, dificultad para respirar). Ante estos casos se activa derivación inmediata a emergencias en lugar de limitarse a dar pautas, y se pregunta la ubicación del usuario.
+
+R13. Ser más intervencionista: ante situaciones como violencia de género, activar automáticamente alerta a emergencias en lugar de solo acompañar al usuario para que llame por su cuenta. [Imagen 2-7]
+>> RESUELTO: Se ha añadido un protocolo específico para situaciones de violencia o peligro para terceros (violencia de género, maltrato infantil, abuso sexual). Ya no se limita a acompañar o sugerir que el usuario llame a un teléfono por su cuenta. Ahora se activa automáticamente la derivación al equipo profesional o emergencias, y se pregunta la ubicación.
+
+R14. El protocolo ante suicidio debe indicar claramente: VALORAR, ACTIVAR o DERIVAR URGENTE A PROFESIONAL. [Imagen 2-10]
+>> RESUELTO: Se ha reestructurado el protocolo de riesgo suicida en tres pasos claros: 1) VALORAR el nivel de riesgo (ideación pasiva vs. plan activo), 2) ACTIVAR la derivación al equipo de emergencias de SAMU, 3) DERIVAR URGENTE transfiriendo la llamada a un profesional mientras se mantiene al usuario acompañado.
+
+R15. La idea es siempre mantener la llamada con la IA, o si es urgente/de riesgo, pasarlo a un profesional de SAMU. [feedback.txt]
+>> RESUELTO: Se ha añadido como principio general la regla de "Continuidad de la llamada": el objetivo es mantener siempre la conversación activa con el usuario. Nunca se sugiere colgar ni buscar ayuda fuera de SAMU. Si la situación es urgente, se deriva internamente al equipo profesional de SAMU.
+
+
+--- DERIVACIÓN A PROFESIONALES ---
+R16. NUNCA derivar a que el usuario acuda a un psicólogo de manera presencial por su cuenta. Eso va en contra del servicio. La derivación siempre debe ser interna (a profesional de SAMU). [Imagen 1-H]
+>> RESUELTO: Se ha añadido como principio general la regla de "Derivación siempre interna". Se han eliminado todas las referencias a acudir a un psicólogo presencial externo. Todas las menciones de derivación ahora dicen "un profesional de nuestro equipo". Se prohíbe explícitamente sugerir al usuario que busque ayuda profesional por su cuenta fuera de SAMU.
+
+R17. El cierre de la llamada debe afinarse: "te paso con un profesional" o "estoy activando al servicio de emergencia y mientras tanto sígueme hablando". [Imagen 2-mejoras]
+>> RESUELTO: Se ha reescrito el cierre con tres escenarios claros: 1) Derivación normal: "Te voy a pasar ahora con un profesional de nuestro equipo." 2) Activación de emergencias: "Estoy activando al servicio de emergencias, quédate conmigo hablando." 3) Cierre sin derivación (por decisión del usuario). En ningún caso se deja al usuario sin acompañamiento.

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Samu Universe ConvAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    body { margin: 0; background: #f8fafc; color:#0f172a; }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 18px; display:grid; gap:14px; }
+    .bar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .pill { background:#eef2ff; color:#3730a3; border:1px solid #c7d2fe; padding: 2px 8px; border-radius: 999px; font-size: 12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; }
+    .status { background:#f1f5f9; border:1px solid #e2e8f0; border-radius: 10px; padding: 10px; font-size: 13px; }
+    .logs { display:flex; flex-direction:column; gap:8px; max-height: 260px; overflow:auto; }
+    .log { background:#ffffff; border:1px solid #e5e7eb; border-radius: 10px; padding: 10px; }
+    .widget-shell { background:#fff; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 12px; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; }
+    .btn:hover { background:#f8fafc; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Demo <span class="mono">Samu Universe</span> (V1.0)</h1>
+    <div class="bar">
+      <div>Sesión:</div><div id="sid" class="pill mono">—</div>
+      <div>Agent ID:</div><div id="aid" class="pill mono">SAMU_demo_v1.0</div>
+      <div id="status" class="pill">⏳ Esperando inicio…</div>
+    </div>
+
+    <div>
+      <h3>Estado de la conversación</h3>
+      <div id="logs" class="logs"></div>
+    </div>
+
+    <div class="widget-shell">
+      <elevenlabs-convai id="convai" agent-id="agent_2701k3nv9en2fqcavhpdmfgbew5b" override-language="es" dynamic-variables='{"session_id":"PENDING"}'></elevenlabs-convai>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  <script>
+    (function(){
+      const $ = (s)=>document.querySelector(s);
+      const widget = $("#convai");
+      const sidEl = $("#sid");
+      const aidEl = $("#aid");
+      const statusEl = $("#status");
+      const logsEl = $("#logs");
+      const testBtn = $("#test");
+      const SID = (self.crypto?.randomUUID?.() || String(Math.random()).slice(2));
+
+      function addLog(message){
+        const el = document.createElement('div');
+        el.className = 'log';
+        el.textContent = new Date().toLocaleString() + ' — ' + String(message);
+        logsEl.appendChild(el);
+        logsEl.scrollTop = logsEl.scrollHeight;
+      }
+
+      // Pintar ids
+      sidEl.textContent = SID;
+      const agentId = widget?.getAttribute('agent-id') || '—';
+      // aidEl.textContent = agentId;
+
+      // Session id dinámico
+      widget?.setAttribute('dynamic-variables', JSON.stringify({ session_id: SID }));
+
+      // Botón de prueba local (no depende del agente)
+      testBtn?.addEventListener('click', () => addLog('UI OK — este mensaje viene del botón local (no del agente).'));
+
+      // Registro del tool al iniciar la llamada
+      widget?.addEventListener('elevenlabs-convai:call', (event) => {
+        statusEl.textContent = '✅ Llamada iniciada';
+        try {
+          const cfg = event?.detail?.config;
+          if (!cfg) {
+            statusEl.textContent = '⚠️ Sin config en event.detail (no se pueden registrar tools)';
+            return;
+          }
+          cfg.clientTools = {
+            // EXACTO según docs: solo 'message'
+            logMessage: async ({ message }) => {
+              addLog(message || '(sin mensaje)');
+              return { ok: true, receivedAt: new Date().toISOString() };
+            }
+          };
+        } catch (e) {
+          console.error('Error registrando clientTools', e);
+          statusEl.textContent = '⚠️ Error registrando clientTools (ver consola)';
+        }
+      });
+
+      widget?.addEventListener('elevenlabs-convai:end', () => {
+        statusEl.textContent = 'ℹ️ Llamada finalizada';
+      });
+      widget?.addEventListener('elevenlabs-convai:error', (e) => {
+        statusEl.textContent = '❌ Error en la llamada';
+        console.error('Widget error', e?.detail || e);
+      });
+    })();
+  </script>
+</body>
+</html>
